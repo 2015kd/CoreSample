@@ -1,0 +1,53 @@
+﻿@page
+@model OdeToFood.Pages.Resturants.ClientResturantsModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+<h2>Client Resturants</h2>
+
+<table class="table" id="resturants">
+
+</table>
+
+
+@section Scripts{
+
+    <environment exclude="Development">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.css" />
+        <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.js"></script>
+    </environment>
+    <environment include="Development">
+        <script src="~/node_modules/datatables.net/js/jquery.dataTables.js"></script>
+        <link href="~/node_modules/datatables.net-bs/css/dataTables.bootstrap.css" rel="stylesheet" />
+        <script src="~/node_modules/datatables.net-bs/js/dataTables.bootstrap.js"></script>
+    </environment>
+
+    <script>
+
+        $(function () {
+
+            var cuisines = ["None", "Mexican", "Italian", "Indian"]
+
+            $.ajax("/api/resturants",
+                { method: "get" })      //returns a promise
+                .then(function (response) {
+                    //console.dir(response);
+                    $("#resturants").dataTable({
+                        data: response,
+                        columns: [
+                            { "data": "name" },
+                            { "data": "location" },
+                            {
+                                "data": "cuisine", "render": function (data) {
+                                    return cuisines[data];
+                                }
+                            }
+                        ]
+                    });
+                });
+        });
+
+    </script>
+}
